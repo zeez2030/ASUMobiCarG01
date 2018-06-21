@@ -1,0 +1,109 @@
+//sensor pins
+const int right_sensor = 2;
+const int middle_sensor = 3;
+const int left_sensor = 4;
+
+//Motor control pins- 
+const int ENA = 10;
+const int ENB = 5;
+const int In1 = 9;
+const int In2 = 8;
+const int In3 = 7;
+const int In4 = 6;
+
+void setup() {
+Serial.begin(9600);
+
+//pins for motor controller
+pinMode(ENA, OUTPUT);
+pinMode(ENB, OUTPUT);
+pinMode(In1, OUTPUT);
+pinMode(In2, OUTPUT);
+pinMode(In3, OUTPUT);
+pinMode(In4, OUTPUT);
+pinMode(right_sensor, INPUT);
+pinMode(middle_sensor, INPUT);
+pinMode(left_sensor, INPUT);
+}
+
+void loop() { 
+      int S2 = digitalRead(right_sensor);
+      int S3 = digitalRead(middle_sensor);
+      int S4 = digitalRead(left_sensor);
+
+      //Conditions to drive line folower appropriately
+      if (S2==0 && S3==0 && S4==0) {
+            //stop
+            Stop();
+      } 
+      else if (S2==1 && S3==1 && S4==1) {
+            //stop
+            Stop();
+      } 
+      else if (S3==0) {
+            //if sensor at the center reads low, go straight
+            forward() ;
+      } 
+      else if (S2==0) {
+            //follower moving towads right, stop left motor
+            right();
+      } 
+      else if (S2==0) {
+            //follower moving towads left, stop right motor
+            left();
+      }
+      else {
+            //stop follower
+            Stop();
+      } 
+}
+
+
+// function for driving straight
+void forward(){
+digitalWrite(In1, HIGH);
+digitalWrite(In2, LOW);
+ 
+digitalWrite(In3, HIGH);
+digitalWrite(In4, LOW);
+ 
+analogWrite(ENA, 80);
+analogWrite(ENB, 80);
+}
+
+//function for turning left
+void right(){
+digitalWrite(In3, LOW);
+digitalWrite(In4, LOW);
+ 
+digitalWrite(In1, HIGH);
+digitalWrite(In2, LOW);
+ 
+analogWrite(ENB, 0);
+analogWrite(ENA, 115);
+}
+ 
+//function for turning right
+void left(){
+digitalWrite(In3, HIGH);
+digitalWrite(In4, LOW);
+ 
+digitalWrite(In1, LOW);
+digitalWrite(In2, LOW);
+ 
+analogWrite(ENB, 130);
+analogWrite(ENA, 0);
+}
+ 
+//function for stopping motors
+void Stop(){
+ 
+digitalWrite(In1, LOW);
+digitalWrite(In2, LOW);
+
+digitalWrite(In3,LOW);
+digitalWrite(In4, LOW);
+ 
+analogWrite(ENA, 0);
+analogWrite(ENB, 0);
+}
