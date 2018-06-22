@@ -1,0 +1,170 @@
+const int ENA = 10;
+const int ENB = 5;
+const int In1 = 9;
+const int In2 = 8;
+const int In3 = 7;
+const int In4 = 6;
+
+int max_speed = 255;
+char command;
+ 
+void setup() {
+Serial.begin(9600);
+
+//pins for motor controller
+pinMode(ENA, OUTPUT);
+pinMode(ENB, OUTPUT);
+pinMode(In1, OUTPUT);
+pinMode(In2, OUTPUT);
+pinMode(In3, OUTPUT);
+pinMode(In4, OUTPUT);
+
+}
+ 
+void loop() {
+
+if(Serial.available() > 0){
+command = Serial.read();
+Stop();
+
+switch(command){
+case 'F':
+forward();
+break;
+case 'B':
+backward();
+break;
+case 'L':
+left();
+break;
+case 'R':
+right();
+break;
+case 'S':
+Stop();
+break;
+case 'G':
+forward_left();
+break;
+case 'I':
+forward_right();
+break;
+case 'H':
+backward_left();
+break;
+case 'J':
+backward_right();
+break;
+}
+}
+}
+ 
+// function for driving straight
+void forward(){
+digitalWrite(In1, HIGH);
+digitalWrite(In2, LOW);
+ 
+digitalWrite(In3, HIGH);
+digitalWrite(In4, LOW);
+ 
+analogWrite(ENA, max_speed);
+analogWrite(ENB, max_speed);
+}
+ 
+//function for reversing
+void backward(){
+ 
+digitalWrite(In1, LOW);
+digitalWrite(In2, HIGH);
+ 
+digitalWrite(In3, LOW);
+digitalWrite(In4, HIGH);
+ 
+analogWrite(ENA, max_speed);
+analogWrite(ENB, max_speed);
+}
+ 
+//function for turning left
+void right(){
+digitalWrite(In3, LOW);
+digitalWrite(In4, LOW);
+ 
+digitalWrite(In1, HIGH);
+digitalWrite(In2, LOW);
+ 
+analogWrite(ENB, 0);
+analogWrite(ENA, max_speed);
+}
+ 
+//function for turning right
+void left(){
+digitalWrite(In3, HIGH);
+digitalWrite(In4, LOW);
+ 
+digitalWrite(In1, LOW);
+digitalWrite(In2, LOW);
+ 
+analogWrite(ENB, max_speed);
+analogWrite(ENA, 0);
+}
+
+//function for moving forward right
+void forward_right(){
+digitalWrite(In3, HIGH);
+digitalWrite(In4, LOW);
+ 
+digitalWrite(In1, HIGH);
+digitalWrite(In2, LOW);
+ 
+analogWrite(ENB, max_speed/1.5);
+analogWrite(ENA, max_speed);
+}
+
+ //function for moving forward left
+void forward_left(){
+digitalWrite(In3, HIGH);
+digitalWrite(In4, LOW);
+  
+digitalWrite(In1, HIGH);
+digitalWrite(In2, LOW);
+ 
+analogWrite(ENB, max_speed);
+analogWrite(ENA, max_speed/1.5);
+}
+
+//function for moving backward right
+void backward_right(){
+digitalWrite(In4, HIGH);
+digitalWrite(In3, LOW);
+ 
+digitalWrite(In1, LOW);
+digitalWrite(In2, HIGH);
+ 
+analogWrite(ENB, max_speed/1.5);
+analogWrite(ENA, max_speed);
+}
+
+//function for moving backward left
+void backward_left(){
+digitalWrite(In4, HIGH);
+digitalWrite(In3, LOW);
+ 
+digitalWrite(In1, LOW);
+digitalWrite(In2, HIGH);
+ 
+analogWrite(ENB, max_speed);
+analogWrite(ENA, max_speed/1.5);
+}
+ 
+//function for stopping motors
+void Stop(){
+ 
+digitalWrite(In1, LOW);
+digitalWrite(In2, LOW);
+
+digitalWrite(In3,LOW);
+digitalWrite(In4, LOW);
+ 
+analogWrite(ENA, 0);
+analogWrite(ENB, 0);
+}
